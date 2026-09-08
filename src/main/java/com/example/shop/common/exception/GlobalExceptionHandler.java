@@ -1,4 +1,4 @@
-package com.example.shop.common;
+package com.example.shop.common.exception;
 
 import com.example.shop.inventory.exception.InsufficientStockException;
 import com.example.shop.order.exception.OrderNotFoundException;
