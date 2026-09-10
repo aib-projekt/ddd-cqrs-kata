@@ -2,7 +2,6 @@ package com.example.shop.order;
 
 import com.example.shop.order.dto.CreateOrderRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,11 +23,6 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     public Order createOrder(@RequestBody CreateOrderRequest request) {
         return orderService.createOrder(request);
-    }
-
-    @GetMapping("/{id}")
-    public Order getOrder(@PathVariable Long id) {
-        return orderService.getOrder(id);
     }
 
     @PostMapping("/{id}/cancel")
