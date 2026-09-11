@@ -1,8 +1,8 @@
 package com.example.shop.order;
 
 import com.example.shop.order.dto.CreateOrderRequest;
+import com.example.shop.order.infrastructure.persistence.OrderEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +21,7 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Order createOrder(@RequestBody CreateOrderRequest request) {
+    public OrderEntity createOrder(@RequestBody CreateOrderRequest request) {
         return orderService.createOrder(request);
-    }
-
-    @PostMapping("/{id}/cancel")
-    public Order cancelOrder(@PathVariable Long id) {
-        return orderService.cancelOrder(id);
     }
 }

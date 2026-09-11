@@ -1,5 +1,7 @@
-package com.example.shop.order;
+package com.example.shop.order.infrastructure.persistence;
 
+import com.example.shop.order.OrderLineEmbeddable;
+import com.example.shop.order.OrderStatus;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -26,7 +28,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Order {
+public class OrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +41,7 @@ public class Order {
 
     @ElementCollection
     @CollectionTable(name = "order_lines", joinColumns = @JoinColumn(name = "order_id"))
-    private List<OrderLine> lines = new ArrayList<>();
+    private List<OrderLineEmbeddable> lines = new ArrayList<>();
 
     private Instant createdAt;
 
@@ -47,7 +49,7 @@ public class Order {
     // actually charged in PaymentService (a separate source of truth).
     public BigDecimal getTotalAmount() {
         return lines.stream()
-                .map(OrderLine::lineTotal)
+                .map(OrderLineEmbeddable::lineTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

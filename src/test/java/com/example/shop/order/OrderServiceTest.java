@@ -4,6 +4,7 @@ import com.example.shop.inventory.InventoryService;
 import com.example.shop.inventory.exception.InsufficientStockException;
 import com.example.shop.order.dto.CreateOrderRequest;
 import com.example.shop.order.dto.OrderLineRequest;
+import com.example.shop.order.infrastructure.persistence.OrderEntity;
 import com.example.shop.payment.Payment;
 import com.example.shop.payment.PaymentService;
 import com.example.shop.payment.exception.PaymentDeclinedException;
@@ -39,8 +40,8 @@ class OrderServiceTest {
     @BeforeEach
     void setUp() {
         orderService = new OrderService(orderRepository, inventoryService, paymentService);
-        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> {
-            Order order = invocation.getArgument(0);
+        when(orderRepository.save(any(OrderEntity.class))).thenAnswer(invocation -> {
+            OrderEntity order = invocation.getArgument(0);
             if (order.getId() == null) {
                 order.setId(1L);
             }
@@ -56,7 +57,7 @@ class OrderServiceTest {
         );
         when(paymentService.charge(any(), any())).thenReturn(new Payment());
 
-        Order result = orderService.createOrder(request);
+        OrderEntity result = orderService.createOrder(request);
 
         assertThat(result.getStatus()).isEqualTo(OrderStatus.CONFIRMED);
         verify(inventoryService).reserveStock("sku-1", 2);
@@ -82,7 +83,7 @@ class OrderServiceTest {
         verify(inventoryService).releaseStock("sku-1", 1);
         verify(paymentService, times(0)).charge(any(), any());
 
-        ArgumentCaptor<Order> captor = ArgumentCaptor.forClass(Order.class);
+        ArgumentCaptor<OrderEntity> captor = ArgumentCaptor.forClass(OrderEntity.class);
         verify(orderRepository, times(2)).save(captor.capture());
         assertThat(captor.getValue().getStatus()).isEqualTo(OrderStatus.FAILED);
     }
@@ -104,12 +105,12 @@ class OrderServiceTest {
 
     @Test
     void cancelOrder_marksCancelled_butDoesNotTouchStockOrPayment() {
-        Order existing = new Order();
+        OrderEntity existing = new OrderEntity();
         existing.setId(5L);
         existing.setStatus(OrderStatus.STOCK_RESERVED);
         when(orderRepository.findById(5L)).thenReturn(Optional.of(existing));
 
-        Order result = orderService.cancelOrder(5L);
+        OrderEntity result = orderService.cancelOrder(5L);
 
         assertThat(result.getStatus()).isEqualTo(OrderStatus.CANCELLED);
         // This is NOT "correct" business behaviour - it documents today's

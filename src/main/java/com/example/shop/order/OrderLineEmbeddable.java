@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderLine {
+public class OrderLineEmbeddable {
 
     private String productId;
     private int quantity;

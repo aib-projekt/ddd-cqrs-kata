@@ -5,6 +5,7 @@ import com.example.shop.inventory.exception.InsufficientStockException;
 import com.example.shop.order.dto.CreateOrderRequest;
 import com.example.shop.order.dto.OrderLineRequest;
 import com.example.shop.order.exception.OrderNotFoundException;
+import com.example.shop.order.infrastructure.persistence.OrderEntity;
 import com.example.shop.payment.PaymentService;
 import com.example.shop.payment.exception.PaymentDeclinedException;
 import org.springframework.stereotype.Service;
@@ -43,12 +44,12 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(CreateOrderRequest request) {
+    public OrderEntity createOrder(CreateOrderRequest request) {
         if (request.lines() == null || request.lines().isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one line");
         }
 
-        Order order = new Order();
+        OrderEntity order = new OrderEntity();
         order.setCustomerId(request.customerId());
         order.setStatus(OrderStatus.CREATED);
         order.setCreatedAt(Instant.now());
@@ -93,8 +94,8 @@ public class OrderService {
     }
 
     @Transactional
-    public Order cancelOrder(Long orderId) {
-        Order order = getOrder(orderId);
+    public OrderEntity cancelOrder(Long orderId) {
+        OrderEntity order = getOrder(orderId);
         if (order.getStatus() == OrderStatus.CONFIRMED) {
             throw new IllegalStateException("Cannot cancel a confirmed order: " + orderId);
         }
@@ -103,15 +104,15 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public Order getOrder(Long orderId) {
+    public OrderEntity getOrder(Long orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 
-    private List<OrderLine> toOrderLines(List<OrderLineRequest> lines) {
-        List<OrderLine> result = new ArrayList<>();
+    private List<OrderLineEmbeddable> toOrderLines(List<OrderLineRequest> lines) {
+        List<OrderLineEmbeddable> result = new ArrayList<>();
         for (OrderLineRequest line : lines) {
-            result.add(new OrderLine(line.productId(), line.quantity(), line.unitPrice()));
+            result.add(new OrderLineEmbeddable(line.productId(), line.quantity(), line.unitPrice()));
         }
         return result;
     }
