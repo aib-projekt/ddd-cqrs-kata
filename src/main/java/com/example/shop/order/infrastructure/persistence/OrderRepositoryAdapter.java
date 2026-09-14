@@ -63,6 +63,7 @@ public class OrderRepositoryAdapter implements OrderRepository {
         orderEntity.setId(order.getId());
         orderEntity.setCustomerId(order.getCustomerId());
         orderEntity.setCreatedAt(order.getCreatedAt());
+        orderEntity.setStatus(order.getStatus());
         orderEntity.setLines(order.getLines().stream()
                 .map(OrderRepositoryAdapter::mapToOrderLineEmbeddable)
                 .toList());

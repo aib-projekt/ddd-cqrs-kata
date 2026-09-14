@@ -1,6 +1,7 @@
 package com.example.shop.order.domain;
 
 import com.example.shop.order.OrderStatus;
+import com.example.shop.order.exception.OrderCancellationException;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -28,14 +29,10 @@ public class Order {
 
     public Order cancel() {
         if (OrderStatus.CONFIRMED == status || OrderStatus.FAILED == status) {
-            throw new IllegalStateException("Order cannot be cancelled");
+            throw new OrderCancellationException(id, "Incorrect status: " + status);
         }
 
         status = OrderStatus.CANCELLED;
-        return this;
-    }
-
-    public Order save() {
         return this;
     }
 }

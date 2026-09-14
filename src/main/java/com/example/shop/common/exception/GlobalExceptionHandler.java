@@ -1,6 +1,7 @@
 package com.example.shop.common.exception;
 
 import com.example.shop.inventory.exception.InsufficientStockException;
+import com.example.shop.order.exception.OrderCancellationException;
 import com.example.shop.order.exception.OrderNotFoundException;
 import com.example.shop.payment.exception.PaymentDeclinedException;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleNotFound(OrderNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+    }
+
+    @ExceptionHandler(OrderCancellationException.class)
+    public ResponseEntity<Map<String, String>> handleStock(OrderCancellationException e) {
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(Map.of("error", e.getMessage()));
     }
 
     @ExceptionHandler(InsufficientStockException.class)

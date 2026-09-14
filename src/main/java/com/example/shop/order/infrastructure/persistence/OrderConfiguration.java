@@ -1,5 +1,6 @@
 package com.example.shop.order.infrastructure.persistence;
 
+import com.example.shop.common.event.publisher.EventPublisher;
 import com.example.shop.order.application.CancelOrderService;
 import com.example.shop.order.application.RetrieveOrderDataService;
 import com.example.shop.order.application.port.in.CancelOrder;
@@ -18,7 +19,7 @@ public class OrderConfiguration {
     }
 
     @Bean
-    CancelOrder cancelOrder(WrappedOrderRepository wrappedOrderRepository) {
-        return new CancelOrderService(new OrderRepositoryAdapter(wrappedOrderRepository));
+    CancelOrder cancelOrder(EventPublisher eventPublisher, WrappedOrderRepository wrappedOrderRepository) {
+        return new CancelOrderService(eventPublisher, new OrderRepositoryAdapter(wrappedOrderRepository));
     }
 }
