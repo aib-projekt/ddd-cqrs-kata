@@ -2,9 +2,9 @@ package com.example.shop.order;
 
 import com.example.shop.inventory.InventoryService;
 import com.example.shop.inventory.exception.InsufficientStockException;
+import com.example.shop.order.common.exception.OrderNotFoundException;
 import com.example.shop.order.dto.CreateOrderRequest;
 import com.example.shop.order.dto.OrderLineRequest;
-import com.example.shop.order.exception.OrderNotFoundException;
 import com.example.shop.order.infrastructure.persistence.OrderEntity;
 import com.example.shop.payment.PaymentService;
 import com.example.shop.payment.exception.PaymentDeclinedException;

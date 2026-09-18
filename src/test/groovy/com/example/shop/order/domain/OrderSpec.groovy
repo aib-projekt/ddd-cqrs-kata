@@ -1,11 +1,14 @@
 package com.example.shop.order.domain
 
 import com.example.shop.order.OrderStatus
+import com.example.shop.order.common.exception.OrderCancellationException
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class OrderSpec extends Specification {
 
-    def 'Should reject cancellation of CONFIRMED or FAILED order'() {
+    @Unroll("#status")
+    def 'Should reject cancel of order with status'() {
         given:
         def order = new Order(id: 123L, status: status)
 
@@ -13,14 +16,15 @@ class OrderSpec extends Specification {
         def result = order.cancel()
 
         then:
-        thrown(IllegalStateException)
+        thrown(OrderCancellationException)
         result == null
 
         where:
         status << [OrderStatus.CONFIRMED, OrderStatus.FAILED]
     }
 
-    def 'Should change the status to CANCELLED'() {
+    @Unroll("#status")
+    def 'Should cancel the order'() {
         given:
         def order = new Order(id: 123L, status: status)
 

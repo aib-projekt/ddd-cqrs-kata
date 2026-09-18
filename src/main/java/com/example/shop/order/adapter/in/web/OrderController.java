@@ -5,7 +5,6 @@ import com.example.shop.order.application.port.in.CancelOrder;
 import com.example.shop.order.application.port.in.RetrieveOrderData;
 import com.example.shop.order.application.query.OrderDetails;
 import com.example.shop.order.domain.event.OrderCancelled;
-import com.example.shop.order.exception.OrderCancellationException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,12 +27,7 @@ public class OrderController {
 
     @PostMapping("/{request}/cancel")
     public OrderCancelled cancelOrder(@PathVariable OrderCancellationRequest request) {
-        var orderCancellationResult = cancelOrder.cancelOrder(new OrderCancellationCommand(request.orderId));
-        if (orderCancellationResult.isCancelled()) {
-            return OrderCancelled.of(orderCancellationResult.getId());
-        } else {
-            throw new OrderCancellationException(orderCancellationResult.getId(), orderCancellationResult.getMessage());
-        }
+        return cancelOrder.cancelOrder(new OrderCancellationCommand(request.orderId));
     }
 
     public record OrderCancellationRequest(Long orderId) { }

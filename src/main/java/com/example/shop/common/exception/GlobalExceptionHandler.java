@@ -1,8 +1,8 @@
 package com.example.shop.common.exception;
 
 import com.example.shop.inventory.exception.InsufficientStockException;
-import com.example.shop.order.exception.OrderCancellationException;
-import com.example.shop.order.exception.OrderNotFoundException;
+import com.example.shop.order.common.exception.OrderCancellationException;
+import com.example.shop.order.common.exception.OrderNotFoundException;
 import com.example.shop.payment.exception.PaymentDeclinedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

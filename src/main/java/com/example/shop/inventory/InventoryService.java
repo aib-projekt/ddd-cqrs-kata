@@ -1,6 +1,7 @@
 package com.example.shop.inventory;
 
 import com.example.shop.inventory.exception.InsufficientStockException;
+import com.example.shop.inventory.infrastructure.persistence.ItemEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,7 @@ public class InventoryService {
 
     @Transactional
     public void reserveStock(String productId, int quantity) {
-        InventoryItem item = inventoryRepository.findById(productId)
+        ItemEntity item = inventoryRepository.findById(productId)
                 .orElseThrow(() -> new NoSuchElementException("Unknown product: " + productId));
 
         if (item.getAvailableQuantity() < quantity) {
@@ -34,7 +35,7 @@ public class InventoryService {
 
     @Transactional
     public void releaseStock(String productId, int quantity) {
-        InventoryItem item = inventoryRepository.findById(productId)
+        ItemEntity item = inventoryRepository.findById(productId)
                 .orElseThrow(() -> new NoSuchElementException("Unknown product: " + productId));
 
         int released = Math.min(quantity, item.getReservedQuantity());
@@ -45,7 +46,7 @@ public class InventoryService {
 
     @Transactional
     public void confirmStock(String productId, int quantity) {
-        InventoryItem item = inventoryRepository.findById(productId)
+        ItemEntity item = inventoryRepository.findById(productId)
                 .orElseThrow(() -> new NoSuchElementException("Unknown product: " + productId));
 
         int confirmed = Math.min(quantity, item.getReservedQuantity());
@@ -55,13 +56,13 @@ public class InventoryService {
 
     @Transactional
     public void restock(String productId, int quantity) {
-        InventoryItem item = inventoryRepository.findById(productId)
-                .orElseGet(() -> new InventoryItem(productId, 0));
+        ItemEntity item = inventoryRepository.findById(productId)
+                .orElseGet(() -> new ItemEntity(productId, 0));
         item.setAvailableQuantity(item.getAvailableQuantity() + quantity);
         inventoryRepository.save(item);
     }
 
-    public InventoryItem getAvailability(String productId) {
+    public ItemEntity getAvailability(String productId) {
         return inventoryRepository.findById(productId)
                 .orElseThrow(() -> new NoSuchElementException("Unknown product: " + productId));
     }

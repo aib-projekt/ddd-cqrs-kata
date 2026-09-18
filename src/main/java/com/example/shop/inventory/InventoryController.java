@@ -1,5 +1,6 @@
 package com.example.shop.inventory;
 
+import com.example.shop.inventory.infrastructure.persistence.ItemEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,12 +21,12 @@ public class InventoryController {
     }
 
     @GetMapping("/{productId}")
-    public InventoryItem getAvailability(@PathVariable String productId) {
+    public ItemEntity getAvailability(@PathVariable String productId) {
         return inventoryService.getAvailability(productId);
     }
 
     @PostMapping("/{productId}/restock")
-    public InventoryItem restock(@PathVariable String productId, @RequestParam int quantity) {
+    public ItemEntity restock(@PathVariable String productId, @RequestParam int quantity) {
         inventoryService.restock(productId, quantity);
         return inventoryService.getAvailability(productId);
     }

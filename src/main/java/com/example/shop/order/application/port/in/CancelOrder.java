@@ -1,8 +1,8 @@
 package com.example.shop.order.application.port.in;
 
-import com.example.shop.common.event.publisher.OrderCancellationResult;
 import com.example.shop.order.application.OrderCancellationCommand;
+import com.example.shop.order.domain.event.OrderCancelled;
 
 public interface CancelOrder {
-    OrderCancellationResult cancelOrder(OrderCancellationCommand command);
+    OrderCancelled cancelOrder(OrderCancellationCommand command);
 }

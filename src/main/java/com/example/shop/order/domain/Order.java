@@ -1,7 +1,7 @@
 package com.example.shop.order.domain;
 
 import com.example.shop.order.OrderStatus;
-import com.example.shop.order.exception.OrderCancellationException;
+import com.example.shop.order.common.exception.OrderCancellationException;
 import lombok.Data;
 
 import java.math.BigDecimal;
